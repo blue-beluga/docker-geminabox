@@ -1,0 +1,26 @@
+# encoding: UTF-8
+
+FROM <%= ENV.fetch('FROM') %>
+MAINTAINER The Blue Beluga <admin@bluebeluga.io>
+
+LABEL name="geminabox"
+LABEL description="Alpine Linux Base with Geminabox"
+LABEL version="latest"
+LABEL git_revision="<%= ENV.fetch('GIT_REVISION') %>"
+
+RUN apk-install --virtual build-dependencies build-base && \
+    gem install geminabox && \
+    apk del build-dependencies build-base && \
+    rm -rf /var/cache/apk/* && \
+    mkdir /data
+
+COPY files/config.ru /
+RUN chown -R nobody:nogroup /data
+USER nobody
+
+VOLUME ["/data"]
+
+EXPOSE 9293
+
+ENTRYPOINT ["bundle", "exec", "rackup"]
+CMD ["--host", "0.0.0.0", "-p", "9293", "-s", "thin", "/config.ru"]
