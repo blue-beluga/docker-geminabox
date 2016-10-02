@@ -3,10 +3,11 @@
 FROM <%= ENV.fetch('FROM') %>
 MAINTAINER The Blue Beluga <admin@bluebeluga.io>
 
-LABEL name="geminabox"
-LABEL description="Alpine Linux Base with Geminabox"
-LABEL version="latest"
-LABEL git_revision="<%= ENV.fetch('GIT_REVISION') %>"
+LABEL vendor="The Blue Beluga Company"
+LABEL io.bluebeluga.geminabox.description="Gem-in-a-box"
+LABEL io.bluebeluga.geminabox.version="<%= ENV.fetch('TAG') %>"
+LABEL io.bluebeluga.geminabox.git-revision="<%= ENV.fetch('GIT_REVISION') %>"
+LABEL io.bluebeluga.geminabox.release-date="<%= Time.now.strftime('%B %d, %Y %H:%M') %>"
 
 RUN apk-install --virtual build-dependencies build-base && \
     gem install geminabox && \
